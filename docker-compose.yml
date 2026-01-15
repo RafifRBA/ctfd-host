@@ -1,0 +1,69 @@
+services:
+  ctfd:
+    build: .
+    user: root
+    restart: always
+    ports:
+      - "54100:8000"
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - UPLOAD_FOLDER=/var/uploads
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=redis://cache:6379
+      - WORKERS=7
+      - LOG_FOLDER=/var/log/CTFd
+      - ACCESS_LOG=-
+      - ERROR_LOG=-
+      - REVERSE_PROXY=false
+      - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
+    volumes:
+      - .data/CTFd/logs:/var/log/CTFd
+      - .data/CTFd/uploads:/var/uploads
+      - .:/opt/CTFd:ro
+    depends_on:
+      - db
+    networks:
+        default:
+        internal:
+
+  # nginx:
+  #   image: nginx:stable
+  #   restart: always
+  #   volumes:
+  #     - ./conf/nginx/http.conf:/etc/nginx/nginx.conf
+  #   ports:
+  #     - 80:80
+  #   depends_on:
+  #     - ctfd
+
+  db:
+    image: mariadb:10.11
+    restart: always
+    # ports:
+    #   - "3306:3306"
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+      - MARIADB_AUTO_UPGRADE=1
+    volumes:
+      - .data/mysql:/var/lib/mysql
+    networks:
+        - default
+        - internal
+    # This command is required to set important mariadb defaults
+    command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --wait_timeout=28800, --log-warnings=0]
+
+  cache:
+    image: redis:4
+    restart: always
+    volumes:
+    - .data/redis:/data
+    networks:
+        internal:
+
+networks:
+    default:
+    internal:
+        internal: true

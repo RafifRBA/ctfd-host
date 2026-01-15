@@ -1,0 +1,24 @@
+/* Jumbotron styles
+-------------------------------------------------- */
+
+// Move down content because we have a fixed navbar that is 3.5rem tall
+main {
+  padding-top: 3.5rem;
+}
+
+.jumbotron {
+  padding: 2rem 1rem;
+  margin-bottom: 2rem;
+  text-align: center;
+
+  background-color: rgba(0, 0, 0, 0.1);
+  color: var(--bs-white);
+  backdrop-filter: blur(10px); /* Adds background blur effect */
+  -webkit-backdrop-filter: blur(10px); /* For Safari support */
+}
+
+@media (min-width: 576px) {
+  .jumbotron {
+    padding: 4rem 2rem;
+  }
+}

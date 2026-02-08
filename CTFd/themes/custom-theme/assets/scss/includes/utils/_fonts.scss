@@ -12,12 +12,32 @@ $fa-font-path: "../webfonts";
 @import "~/@fortawesome/fontawesome-free/scss/solid.scss";
 @import "~/@fortawesome/fontawesome-free/scss/brands.scss";
 
+@font-face {
+  font-family: "Montserrat";
+  src: url("/themes/custom-theme/static/font/Montserrat-Regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Jakarta";
+  src: url("/themes/custom-theme/static/font/PlusJakartaSans-Regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Pulsar";
+  src: url("/themes/custom-theme/static/font/Pulsar-Original.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
 html,
 body,
 .container {
-  font-family: "Lato", sans-serif;
+  font-family: "Jakarta";
 }
 
 .jumbotron .container {
-  font-family: "Raleway", sans-serif;
+  font-family: "Montserrat";
 }

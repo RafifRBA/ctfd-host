@@ -1,10 +1,10 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+<nav class="navbar navbar-expand-md fixed-top">
   <div class="container">
     <a href="{{ url_for('views.static_html', route='/') }}" class="navbar-brand">
       {% if Configs.ctf_logo %}
         <img
             class="img-responsive ctf_logo"
-            src="{{ url_for('views.files', path=Configs.ctf_logo) }}"
+            src="/themes/custom-theme/static/img/favicon.svg"
             alt="{{ Configs.ctf_name }}"
             height="25"
         >
@@ -194,7 +194,7 @@
           </form>
         </li>
 
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <button class="nav-link theme-switch" type="button">
             <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% trans %}Toggle theme{% endtrans %}">
               <i class="fas fa-sun d-none d-md-inline"></i>
@@ -204,7 +204,7 @@
               {% trans %}Toggle theme{% endtrans %}
             </span>
           </button>
-        </li>
+        </li> -->
       </ul>
     </div>
   </div>

@@ -4,7 +4,7 @@
   <title>{{ title or Configs.ctf_name }}</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" href="{{ Configs.ctf_small_icon }}" type="image/x-icon">
+  <link rel="shortcut icon" href="/themes/custom-theme/static/img/favicon.svg" type="image/x-icon">
 
   {{ meta | safe }}
 
@@ -49,10 +49,10 @@
 
 {% include "components/snackbar.html" %}
 
-<footer class="footer">
+<footer class="footer" style="background-color: #101726; margin-top: auto; width: 100%; box-shadow: 0 4px 16px 0 rgba(0,0,0,0.25);">
   <div class="container text-center">
     <a href="https://ctfd.io" class="text-secondary">
-      <small class="text-muted">
+      <small class="text-muted" style="color: #ffffff !important; text-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;">
         {% trans %}Powered by CTFd{% endtrans %}
       </small>
     </a>

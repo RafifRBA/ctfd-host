@@ -10,9 +10,12 @@ main {
   padding: 2rem 1rem;
   margin-bottom: 2rem;
   text-align: center;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
 
-  background-color: var(--bs-dark);
-  color: var(--bs-white);
+  background-color: #577BC1;
+  color: #ffc400;
+  backdrop-filter: blur(10px); // Add blur effect to background
+  -webkit-backdrop-filter: blur(10px); // Safari support
 }
 
 @media (min-width: 576px) {

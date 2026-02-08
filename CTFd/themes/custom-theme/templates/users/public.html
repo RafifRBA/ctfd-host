@@ -116,8 +116,8 @@
 
       <div class="row">
         <div class="col-md-12">
-          <h3>Solves</h3>
-          <table class="table table-striped align-middle">
+          <h3 class="text-white">Solves</h3>
+          <table class="table table-striped align-middle rounded overflow-hidden">
             <thead>
             <tr>
               <th>{% trans %}Challenge{% endtrans %}</th>
@@ -168,13 +168,13 @@
             <svg height="16" width="16">
               <circle cx="8" cy="8" r="5" fill="rgb(0, 209, 64)" />
             </svg>
-            <small x-text="`Solves (${getSolvePercentage()}%)`"></small>
+            <small class="text-white" x-text="`Solves (${getSolvePercentage()}%)`"></small>
           </div>
           <div class="ps-2 float-start">
             <svg height="16" width="16">
               <circle cx="8" cy="8" r="5" fill="rgb(207, 38, 0)" />
             </svg>
-            <small x-text="`Fails (${getFailPercentage()}%)`"></small>
+            <small class="text-white" x-text="`Fails (${getFailPercentage()}%)`"></small>
           </div>
         </div>
         <div class="col-md-6 d-none d-md-block d-lg-block py-4">
@@ -193,7 +193,7 @@
               <svg height="16" width="16">
                 <circle cx="8" cy="8" r="5" :fill="category.color" />
               </svg>
-              <small x-text="`${category.name} (${category.percent}%)`"></small>
+              <small class="text-white" x-text="`${category.name} (${category.percent}%)`"></small>
             </div>
           </template>
         </div>
@@ -210,7 +210,7 @@
       </div>
     {% else %}
       <div class="row min-vh-25">
-        <h3 class="opacity-50 text-center w-100 justify-content-center align-self-center">
+        <h3 class="text-white opacity-50 text-center w-100 justify-content-center align-self-center">
           {% trans %}No solves yet{% endtrans %}
         </h3>
       </div>

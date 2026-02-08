@@ -7,7 +7,7 @@
 
         <ul class="nav nav-tabs">
           <li class="nav-item">
-            <button class="nav-link active" data-bs-target="#challenge" @click="showChallenge()">
+            <button class="nav-link active findit-challenge-detail" data-bs-target="#challenge" @click="showChallenge()">
               {% trans %}Challenge{% endtrans %}
             </button>
           </li>
@@ -284,7 +284,7 @@
           <div role="tabpanel" class="tab-pane fade" id="submissions">
             <div class="row">
               <div class="col-md-12">
-                <table class="table table-striped align-middle text-center">
+                <table class="table table-striped align-middle text-center rounded overflow-hidden">
                   <thead>
                   <tr>
                     <th>{% trans %}Submission{% endtrans %}</th>

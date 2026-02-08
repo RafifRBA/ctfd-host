@@ -4,14 +4,14 @@
  * Get user preferred theme from their past choice or browser
  * @returns {String} User preferred theme
  */
-function getPreferredTheme() {
-  const storedTheme = localStorage.getItem("theme");
-  if (storedTheme) {
-    return storedTheme;
-  }
-  // Firefox with 'resistFingerprint' activated always returns light
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-}
+// function getPreferredTheme() {
+//   const storedTheme = localStorage.getItem("theme");
+//   if (storedTheme) {
+//     return storedTheme;
+//   }
+//   // Firefox with 'resistFingerprint' activated always returns light
+//   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+// }
 
 /**
  * Update navbar icon to match given theme.

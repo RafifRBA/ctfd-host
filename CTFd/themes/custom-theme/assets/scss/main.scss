@@ -195,3 +195,12 @@ body {
 .nav-item {
   text-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
 }
+
+// Button saat download attachment file
+.btn-file {
+  background-color: #577BC1 !important;
+  border-color: #577BC1 !important;
+  color: #F1F1F1!important;
+  box-shadow: 
+    inset 4px 4px 20px rgba(225, 225, 225, 0.4) !important;
+}

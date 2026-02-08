@@ -356,13 +356,13 @@
 
     {% if solves or awards %}
       {% if awards %}
-        <div class="row">
+        <div class="row text-white">
           <div class="col-md-12">
             <h3>{% trans %}Awards{% endtrans %}</h3>
           </div>
 
           {% for award in awards %}
-            <div class="col-md-3 col-sm-6">
+            <div class="text-white col-md-3 col-sm-6">
               <p class="text-center">
                 <i class="award-icon award-{{ award.icon }} fa-2x"></i>
                 <br>

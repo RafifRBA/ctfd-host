@@ -1,0 +1,360 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  /* --- CUSTOM CSS: Solves Table Style --- */
+  .table-list-style {
+      border-collapse: separate !important;
+      border-spacing: 0 10px !important;
+      width: 100%;
+  }
+  
+  .table-list-style tbody tr {
+      background-color: rgba(255, 255, 255, 0.05);
+      transition: transform 0.2s;
+  }
+  
+  .table-list-style tbody tr:hover {
+      transform: scale(1.01);
+      background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .table-list-style td {
+      border-top: 1px solid rgba(255,255,255,0.2) !important;
+      border-bottom: 1px solid rgba(255,255,255,0.2) !important;
+      padding: 15px !important;
+      vertical-align: middle;
+  }
+  
+  /* Border melengkung tabel */
+  .table-list-style td:first-child {
+      border-left: 1px solid rgba(255,255,255,0.2) !important;
+      border-top-left-radius: 20px;
+      border-bottom-left-radius: 20px;
+  }
+  
+  .table-list-style td:last-child {
+      border-right: 1px solid rgba(255,255,255,0.2) !important;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+  }
+  
+  .table-list-style thead th {
+      border: none !important;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      opacity: 0.7;
+      padding-bottom: 10px;
+  }
+
+  /* --- CUSTOM CSS: Awards List Style --- */
+  .award-card {
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      transition: all 0.2s ease;
+  }
+
+  .award-card:hover {
+      transform: translateY(-3px);
+      background-color: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.4);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  }
+
+  /* Solve challenge links - dark text with hover underline */
+  .solve-challenge-link {
+      color: #212529 !important;
+  }
+  .solve-challenge-link:hover {
+      color: #000000 !important;
+      text-decoration: underline !important;
+      text-decoration-thickness: 2px !important;
+      text-underline-offset: 4px !important;
+  }
+
+  .award-icon-container {
+      min-width: 80px;
+      text-align: center;
+      padding-right: 20px;
+      border-right: 1px solid rgba(255,255,255,0.1);
+      margin-right: 20px;
+  }
+</style>
+
+  <div class="jumbotron">
+    <div class="container">
+      <h1 id="team-id" data-ctfd-team-id="{{ team.id }}" class="text-center display-3 fw-bold">{{ team.name }}</h1>
+
+      <div class="text-center mt-3">
+        {% if team.oauth_id %}
+          <a href="https://majorleaguecyber.org/t/{{ team.name }}">
+            <h3 class="d-inline-block mx-1"><span class="badge bg-primary rounded-pill">{% trans %}Official{% endtrans %}</span></h3>
+          </a>
+        {% endif %}
+
+        {% if team.affiliation %}
+          <h3 class="d-inline-block mx-1">
+            <span class="badge bg-primary rounded-pill">{{ team.affiliation }}</span>
+          </h3>
+        {% endif %}
+
+        {% if team.country %}
+          <h3 class="d-inline-block mx-1">
+            <span class="badge bg-primary rounded-pill">
+              <i class="flag-{{ team.country.lower() }}"></i>
+              {{ lookup_country_code(team.country) }}
+            </span>
+          </h3>
+        {% endif %}
+      </div>
+
+      {% if team.bracket_id %}
+        <div class="pt-2 text-center">
+          <h2>
+            <span class="badge text-bg-light">
+              {{ team.bracket.name }}
+            </span>
+          </h2>
+        </div>
+      {% endif %}
+
+      <div class="pt-2 text-center">
+        {% for field in team.fields %}
+          <h3 class="d-block">
+            {{ field.name }}: {{ field.value }}
+          </h3>
+        {% endfor %}
+      </div>
+
+      <div class="pt-2 text-center">
+        {% if team.website and (team.website.startswith('http://') or team.website.startswith('https://')) %}
+          <a href="{{ team.website }}" target="_blank" style="color: inherit;" rel="noopener">
+            <i
+                class="fas fa-external-link-alt fa-2x px-2" data-toggle="tooltip" data-placement="top"
+                title="{{ team.website }}"
+            ></i>
+          </a>
+        {% endif %}
+      </div>
+
+      {% if team.fields or team.website %}
+        <hr class="w-50 mx-auto border-secondary">
+      {% endif %}
+
+      <div class="row justify-content-center mt-4">
+        <div class="col-md-6 text-center">
+          <h2 id="team-score" class="fw-bold text-white">
+            {% if score %}
+              {{ score }} <small style="font-size: 0.6em; color: #F1F1F1 !important;">points</small>
+            {% endif %}
+          </h2>
+          
+          <h2 id="team-place" class="h4" style="color: #E0E0E0 !important;">
+            {% if scores_visible() %}
+              {% if place %}
+                {{ place }} <small style="color: #E0E0E0 !important;">place</small>
+              {% endif %}
+            {% endif %}
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    {% include "components/errors.html" %}
+
+    <br>
+
+    <div class="row mt-4">
+      <div class="col-12 mb-4">
+         <h3 class="member-list-title text-white border-bottom pb-2 border-secondary d-inline-block">
+           <i class="fas fa-users me-2"></i> Team Members
+         </h3>
+      </div>
+
+      {% for member in team.members %}
+      <div class="col-md-4 mb-4">
+        <div class="member-item-card h-100 p-4 d-flex align-items-center" style="background: rgba(255,255,255,0.05); border-radius: 20px; border: 1px solid rgba(255,255,255,0.2);">
+          
+          <div class="member-avatar-small me-3 d-flex align-items-center justify-content-center rounded-circle shadow" 
+               style="width: 60px; height: 60px; font-size: 1.5rem; background: linear-gradient(135deg, #577BC1, #344CB7); color: white; border: 2px solid rgba(255,255,255,0.3);">
+            {{ member.name[0] | upper }}
+          </div>
+
+          <div class="member-info flex-grow-1">
+            <h5 class="mb-1 fw-bold text-white">
+              <a href="{{ url_for('users.public', user_id=member.id) }}" class="text-white text-decoration-none stretched-link">
+                {{ member.name }}
+              </a>
+            </h5>
+            
+            <div class="mb-1">
+              {% if team.captain_id == member.id %}
+                <span class="badge bg-warning text-dark"><i class="fas fa-crown me-1"></i> Captain</span>
+              {% else %}
+                 <span class="badge border border-secondary text-light" style="background: transparent;">Member</span>
+              {% endif %}
+            </div>
+            
+            <small style="color: #E0E0E0 !important;">Score: <span class="fw-bold" style="color: #F1F1F1 !important;">{{ member.score }}</span></small>
+          </div>
+
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if solves or awards %}
+      
+      {% if awards %}
+        <div class="row text-white mt-5">
+          <div class="col-md-12 mb-3">
+            <h3>{% trans %}Awards{% endtrans %}</h3>
+          </div>
+
+          {% for award in awards %}
+            <div class="col-12 mb-3">
+              <div class="award-card">
+                <div class="award-icon-container">
+                  <i class="award-icon award-{{ award.icon }} fa-3x text-warning"></i>
+                </div>
+                
+                <div class="flex-grow-1">
+                  <h4 class="mb-1 fw-bold">{{ award.name }}</h4>
+                  {% if award.category %}
+                    <span class="badge bg-secondary mb-1">{{ award.category }}</span>
+                  {% endif %}
+                  {% if award.description %}
+                    <p class="mb-0 text-muted small">{{ award.description }}</p>
+                  {% endif %}
+                </div>
+
+                <div class="text-end ps-3">
+                   <h3 class="mb-0 fw-bold text-info">{{ award.value }}</h3>
+                   <small class="text-muted">points</small>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <br>
+      {% endif %}
+      <div class="row mt-4" x-data="TeamGraphs">
+        <div class="text-white col-md-12">
+          <h3>{% trans %}Solves History{% endtrans %}</h3>
+          
+          <div class="team-card-custom p-3 mb-4" style="background: rgba(255,255,255,0.02); border-radius: 10px;">
+             <div id="score-graph" x-ref="scoregraph" class="w-100 d-flex align-items-center" style="min-height: 350px;">
+                <div class="text-center w-100">
+                  <i class="fas fa-circle-notch fa-spin fa-3x fa-fw spinner text-muted"></i>
+                </div>
+             </div>
+          </div>
+
+          <table class="table table-list-style">
+            <thead>
+            <tr>
+              <th class="text-center">{% trans %}Challenge{% endtrans %}</th>
+              <th class="d-none d-md-block d-lg-block">{% trans %}Category{% endtrans %}</th>
+              <th>{% trans %}Value{% endtrans %}</th>
+              <th>{% trans %}Time{% endtrans %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for solve in solves %}
+              <tr>
+                <td class="text-center">
+                  <a href="{{ url_for('challenges.listing') }}#{{ solve.challenge.name }}-{{ solve.challenge.id }}" class="text-decoration-none fw-bold solve-challenge-link">
+                    {{ solve.challenge.name }}
+                  </a>
+                </td>
+                <td class="d-none d-md-block d-lg-block">{{ solve.challenge.category }}</td>
+                <td>{{ solve.challenge.value }}</td>
+                <td class="solve-time" style="color: #6c757d;">
+                  <span data-time="{{ solve.date | isoformat }}"></span>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="clearfix"></div>
+
+      <div class="row mt-4" x-data="TeamGraphs">
+        <div class="col-md-6 d-none d-md-block d-lg-block py-4">
+          <div class="progress" style="height: 10px;">
+            <div
+              class="progress-bar"
+              role="progressbar"
+              :style="{ width: `${getSolvePercentage()}%`, 'background-color': '#10b981' }"
+            >
+            </div>
+            <div
+              class="progress-bar"
+              role="progressbar"
+              :style="{ width: `${getFailPercentage()}%`, 'background-color': '#ef4444' }"
+            >
+            </div>
+          </div>
+          <div class="mt-2">
+             <div class="float-start me-3">
+                <span style="color: #10b981;">●</span> <small class="text-white" x-text="`Solves (${getSolvePercentage()}%)`"></small>
+             </div>
+             <div class="float-start">
+                <span style="color: #ef4444;">●</span> <small class="text-white" x-text="`Fails (${getFailPercentage()}%)`"></small>
+             </div>
+          </div>
+        </div>
+        <div class="col-md-6 d-none d-md-block d-lg-block py-4">
+          <div class="progress" style="height: 10px;">
+            <template x-for="category in getCategoryBreakdown()" :key="category.name">
+              <div
+                class="progress-bar"
+                role="progressbar"
+                :style="{ width: `${category.percent}%`, 'background-color': category.color }"
+              >
+              </div>
+            </template>
+          </div>
+          <div class="mt-2">
+            <template x-for="category in getCategoryBreakdown()" :key="category.name">
+              <div class="float-start me-3">
+                <span :style="{color: category.color}">●</span>
+                <small class="text-white" x-text="`${category.name} (${category.percent}%)`"></small>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="row min-vh-25 mt-5">
+        <h3 class="text-white opacity-50 text-center w-100 justify-content-center align-self-center">
+          {% trans %}No solves yet{% endtrans %}
+        </h3>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+      window.TEAM =
+      {{
+        {
+           'type': 'team',
+           'id': team.id,
+           'name': team.name,
+           'account_id': team.id,
+        } | tojson
+      }}
+  </script>
+
+  {{ Assets.js("assets/js/teams/public.js") }}
+{% endblock %}

@@ -1,0 +1,240 @@
+@use "bootstrap/scss/bootstrap" as * with (
+  $info: #5c728f
+);
+
+@use "includes/components/table";
+@use "includes/components/jumbotron";
+@use "includes/components/challenge";
+@use "includes/components/sticky-footer";
+@use "includes/components/graphs";
+
+@use "includes/utils/fonts";
+@use "includes/utils/opacity";
+@use "includes/utils/min-height";
+@use "includes/utils/cursors";
+@use "includes/utils/lolight";
+
+@use "includes/icons/award-icons";
+@use "includes/icons/flag-icons";
+
+h1,
+h2 {
+  font-weight: 500;
+  letter-spacing: 2px;
+}
+
+// Link styling - More specific to avoid breaking buttons
+// Light background areas (modal, challenge content, cards) - black links
+.modal-content a:not(.btn):not(.nav-link):not(.challenge-button),
+.card a:not(.btn):not(.nav-link),
+.challenge-desc a,
+.tab-content a:not(.btn):not(.nav-link) {
+  color: #212529 !important;
+  text-decoration: none !important;
+}
+.modal-content a:not(.btn):not(.nav-link):not(.challenge-button):hover,
+.card a:not(.btn):not(.nav-link):hover,
+.challenge-desc a:hover,
+.tab-content a:not(.btn):not(.nav-link):hover {
+  color: #000000 !important;
+  text-decoration: underline !important;
+  text-decoration-thickness: 2px !important;
+  text-underline-offset: 4px !important;
+}
+
+// Dark background areas (navbar, footer, jumbotron) - white links
+.navbar a:not(.btn),
+footer a:not(.btn),
+.footer a:not(.btn),
+.jumbotron a:not(.btn) {
+  color: #E0E0E0 !important;
+  text-decoration: none !important;
+}
+.navbar a:not(.btn):hover,
+footer a:not(.btn):hover,
+.footer a:not(.btn):hover,
+.jumbotron a:not(.btn):hover {
+  color: #FFFFFF !important;
+  text-decoration: underline !important;
+  text-decoration-thickness: 2px !important;
+  text-underline-offset: 4px !important;
+}
+
+blockquote {
+  border-left: 4px solid $secondary;
+  padding-left: 15px;
+}
+
+input,
+select {
+  padding: 0.6rem !important;
+  height: auto !important;
+}
+
+.fa-spin.spinner {
+  text-align: center;
+  opacity: 0.5;
+}
+
+.badge-notification {
+  vertical-align: top;
+  margin-left: -1.5em;
+  font-size: 50%;
+}
+
+.form-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e");
+  background-size: 8px 10px;
+}
+
+// Style untuk button utama
+.btn-primary {
+  background-color: #577BC1 !important;
+  border-color: #577BC1 !important;
+  color: #F1F1F1!important;
+  box-shadow: 
+    inset 4px 4px 20px rgba(225, 225, 225, 0.4) !important;
+}
+
+.btn-primary:hover {
+  background-color: #6E8ED0!important;
+}
+
+// Ini buat text yang ada di label register, login, dll
+.form-label {
+  color: #ffffff !important;
+}
+.form-text {
+  color: #9e9e9e !important;
+}
+
+// Ya putih aja
+.text-white {
+  color: #F1F1F1 !important;
+}
+
+// Ini ketika navigasi di navbar
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  background-color: #577BC1 !important;
+  color: #F1F1F1 !important;
+}
+.nav-pills .nav-link {
+  color: #F1F1F1 !important;
+}
+
+// Styling button bagian submit flag
+.challenge-submit {
+  background-color: #577BC1 !important;
+  border-color: #577BC1 !important;
+  color: #F1F1F1!important;
+  box-shadow: 
+    inset 4px 4px 20px rgba(225, 225, 225, 0.4) !important;
+}
+.challenge-submit:hover {
+  background-color: #6E8ED0 !important;
+}
+
+// Ini buat tab solve dan soal di page challenge 
+.challenge-solves {
+  color: #577BC1!important;
+}
+.challenge-solves.active {
+  color: #000 !important;
+}
+.findit-challenge-detail {
+  color: #577BC1!important;
+}
+.findit-challenge-detail.active {
+  color: #000 !important;
+}
+
+// Header kategori challenge (binex, webex, dll)
+.category-header h3 {
+  color: #F1F1F1 !important;
+}
+
+// Styling untuk page challenge
+.challenge-button:not(.challenge-solved) {
+  border-radius: 16px !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  box-shadow:
+    0 4px 16px rgba(0,0,0,0.25) !important;
+  color: #F1F1F1 !important;
+}
+
+.challenge-button:not(.challenge-solved):hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255,255,255,0.3) !important;
+  color: #F1F1F1 !important;
+}
+.challenge-button {
+  border-radius: 16px !important;
+  background-color: #29c830 !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  box-shadow:
+    0 4px 16px rgba(0,0,0,0.25) !important;
+  color: #F1F1F1 !important;
+}
+
+.challenge-button:hover {
+  background-color: #37d63e !important;
+  border-color: rgba(255,255,255,0.3) !important;
+  color: #F1F1F1 !important;
+}
+
+.progress-bar {
+  color: white !important;
+}
+
+.navbar-nav .nav-link {
+  color: #F1F1F1 !important;
+  border-radius: 16px !important;
+}
+.navbar-nav .nav-link:hover {
+  background-color: color-mix(in oklab, #F1F1F1 10%, transparent) !important;
+  transition: background-color 0.2s ease-in-out;
+  text-decoration: none !important;
+}
+
+.findit-forgot-password {
+  color: #F1F1F1 !important;
+}
+.findit-forgot-password:hover {
+  text-decoration: underline !important;
+  text-decoration-thickness: 2px !important;
+  text-underline-offset: 4px !important;
+}
+
+.badge.bg-secondary {
+  background-color: #344CB7 !important;
+}
+
+.nav-item {
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
+}
+
+// Button saat download attachment file
+.btn-file {
+  background-color: #577BC1 !important;
+  border-color: #577BC1 !important;
+  color: #F1F1F1!important;
+  box-shadow: 
+    inset 4px 4px 20px rgba(225, 225, 225, 0.4) !important;
+}
+
+#solves .table > thead > tr > th {
+  color: #000 !important;
+}
+
+// Users table - user name links
+.table tbody td a {
+  color: #212529 !important;
+  text-decoration: none !important;
+}
+.table tbody td a:hover {
+  text-decoration: underline !important;
+}
+
+// (tidak ada custom CSS untuk .member-item-card, .member-avatar-small, .member-info)

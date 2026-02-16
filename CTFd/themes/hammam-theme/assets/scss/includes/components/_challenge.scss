@@ -1,0 +1,19 @@
+/* Challenge styles
+-------------------------------------------------- */
+
+.challenge-desc {
+  overflow-wrap: anywhere;
+
+  img {
+    max-width: 100%;
+  }
+}
+
+.challenge-connection-info {
+  // Style untuk container
+  display: block;
+  
+  code {
+    color: #577BC1 !important;
+  }
+}

@@ -1,0 +1,163 @@
+<div class="navbar-brand-custom">
+    <a href="{{ url_for('views.static_html', route='/') }}">
+        {% if Configs.ctf_logo %}
+            <img src="{{ url_for('views.files', path=Configs.ctf_logo) }}" alt="{{ Configs.ctf_name }}">
+        {% else %}
+            <img src="/themes/hammam-theme/static/img/logo.png" alt="Find IT Logo">
+        {% endif %}
+    </a>
+</div>
+
+<nav class="navbar-floating-center">
+    <button class="navbar-toggler d-md-none" type="button" onclick="toggleMobileNav()">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <ul class="navbar-nav nav-links" id="navLinks">
+        <!-- Left side navigation -->
+        {% if Configs.account_visibility != 'admins' %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('users.listing') }}">
+                    {% trans %}Users{% endtrans %}
+                </a>
+            </li>
+
+            {% if Configs.user_mode == 'teams' %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('teams.listing') }}">
+                        {% trans %}Teams{% endtrans %}
+                    </a>
+                </li>
+            {% endif %}
+        {% endif %}
+
+        {% if Configs.account_visibility != 'admins' and Configs.score_visibility != 'admins' %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('scoreboard.listing') }}">
+                    {% trans %}Scoreboard{% endtrans %}
+                </a>
+            </li>
+        {% endif %}
+
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('challenges.listing') }}">
+                {% trans %}Challenges{% endtrans %}
+            </a>
+        </li>
+
+        {% for page in Plugins.user_menu_pages %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ page.route }}" {% if page.link_target %}target="{{ page.link_target }}"{% endif %}>
+                    {{ page.title }}
+                </a>
+            </li>
+        {% endfor %}
+
+        <!-- Spacer for flex -->
+        <li class="nav-spacer"></li>
+
+        <!-- Right side navigation - only Login/Register/Logout -->
+        {% if authed() %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('auth.logout') }}">
+                    <i class="fas fa-sign-out-alt pe-1"></i>
+                    {% trans %}Logout{% endtrans %}
+                </a>
+            </li>
+        {% else %}
+            {% if registration_visible() %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.register') }}">
+                        <i class="fas fa-user-plus pe-1"></i>
+                        {% trans %}Register{% endtrans %}
+                    </a>
+                </li>
+            {% endif %}
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('auth.login') }}">
+                    <i class="fas fa-sign-in-alt pe-1"></i>
+                    {% trans %}Login{% endtrans %}
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+
+<!-- FAB Menu for authenticated users -->
+{% if authed() %}
+<div class="fab-container">
+    <div class="fab-menu" id="fabMenu">
+        {% if is_admin() %}
+            <a href="{{ url_for('admin.view') }}"><i class="fas fa-lock"></i> Admin Panel</a>
+        {% endif %}
+        <a href="{{ url_for('views.notifications') }}">
+            <i class="fas fa-bell"></i> {% trans %}Notifications{% endtrans %}
+            <span x-data x-show="$store.unread_count > 0" x-text="$store.unread_count" class="badge rounded-pill bg-danger ms-1"></span>
+        </a>
+        {% if Configs.user_mode == "teams" %}
+            <a href="{{ url_for('teams.private') }}"><i class="fas fa-users"></i> {% trans %}Team{% endtrans %}</a>
+        {% endif %}
+        <a href="{{ url_for('users.private') }}"><i class="fas fa-user-circle"></i> {% trans %}Profile{% endtrans %}</a>
+        <a href="{{ url_for('views.settings') }}"><i class="fas fa-cogs"></i> {% trans %}Settings{% endtrans %}</a>
+        <div class="fab-language-dropdown">
+            <a href="javascript:void(0)" onclick="toggleLangDropdown(event)" class="fab-lang-trigger">
+                <i class="fas fa-language"></i> {% trans %}Language{% endtrans %}
+                <i class="fa-brands fa-duolingo ms-auto"></i>
+            </a>
+            <form x-data="LanguageForm" class="fab-lang-submenu" id="langSubmenu">
+                {% set curr_lang = get_locale() %}
+                {%- for lang in Languages.names.items() %}
+                    <span class="fab-lang-item {{ 'active' if (curr_lang == lang[0]) }}" @click="set" value="{{ lang[0] }}">
+                        {{ lang[1] }}
+                    </span>
+                {%- endfor %}
+            </form>
+        </div>
+    </div>
+    <button class="fab-main-btn" onclick="toggleFab()">
+        <i class="fas fa-cog" id="fabIcon"></i>
+    </button>
+</div>
+{% endif %}
+
+<script>
+function toggleFab() {
+    const menu = document.getElementById('fabMenu');
+    const icon = document.querySelector('.fab-main-btn i');
+    
+    if (menu) {
+        menu.classList.toggle('show');
+    }
+    if (icon) {
+        icon.classList.toggle('rotate');
+    }
+}
+
+function toggleMobileNav() {
+    const navLinks = document.getElementById('navLinks');
+    if (navLinks) {
+        navLinks.classList.toggle('show-mobile');
+    }
+}
+
+function toggleLangDropdown(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    const submenu = document.getElementById('langSubmenu');
+    if (submenu) {
+        submenu.classList.toggle('show');
+    }
+}
+
+// Close FAB menu when clicking outside
+document.addEventListener('click', function(event) {
+    const fabContainer = document.querySelector('.fab-container');
+    const fabMenu = document.getElementById('fabMenu');
+    if (fabContainer && fabMenu && !fabContainer.contains(event.target)) {
+        fabMenu.classList.remove('show');
+        const icon = document.querySelector('.fab-main-btn i');
+        if (icon) icon.classList.remove('rotate');
+    }
+});
+</script>

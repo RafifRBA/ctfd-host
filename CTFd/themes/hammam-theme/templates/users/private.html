@@ -1,0 +1,331 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  /* --- CUSTOM CSS: Layout & Components --- */
+  
+  /* 1. Profile Sidebar (Kiri) */
+  .profile-sidebar {
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 30px 20px;
+      text-align: center;
+      position: sticky;
+      top: 20px;
+  }
+
+  .profile-avatar {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, #577BC1, #344CB7);
+      color: #fff;
+      font-size: 3.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 4px solid rgba(255,255,255,0.3);
+      box-shadow: none;
+  }
+
+  .stat-box {
+      background: rgba(0,0,0,0.2);
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 15px;
+      border: 1px solid rgba(255,255,255,0.05);
+  }
+
+  /* 2. Style Tabel & List (Kanan) */
+  .table-list-style {
+      border-collapse: separate !important;
+      border-spacing: 0 10px !important;
+      width: 100%;
+  }
+  
+  .table-list-style tbody tr {
+      background-color: rgba(255, 255, 255, 0.05);
+      transition: transform 0.2s;
+  }
+  
+  .table-list-style tbody tr:hover {
+      transform: translateX(5px);
+      background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .table-list-style td {
+      border-top: 1px solid rgba(255,255,255,0.1) !important;
+      border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+      padding: 15px !important;
+      vertical-align: middle;
+      color: white;
+  }
+  
+  /* Melengkungkan sudut tabel */
+  .table-list-style td:first-child {
+      border-left: 1px solid rgba(255,255,255,0.1) !important;
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+  }
+  
+  .table-list-style td:last-child {
+      border-right: 1px solid rgba(255,255,255,0.1) !important;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+  }
+  
+  .table-list-style thead th {
+      border: none !important;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      opacity: 0.6;
+      padding-bottom: 5px;
+      color: #ccc;
+  }
+
+  /* 3. Style Kartu Awards */
+  .award-card {
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      transition: all 0.2s ease;
+      margin-bottom: 15px;
+  }
+
+  .award-card:hover {
+      transform: translateY(-2px);
+      background-color: rgba(255, 255, 255, 0.08);
+      border-color: #ffc107; 
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  }
+
+  .section-title {
+      font-weight: bold;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      color: #fff;
+  }
+</style>
+
+<div class="container mt-5">
+    {% include "components/errors.html" %}
+
+    <div class="row">
+        <div class="col-md-4 col-lg-3 mb-4">
+            <div class="profile-sidebar">
+                
+                <div class="profile-avatar">
+                    {{ user.name[0] | upper }}
+                </div>
+
+                <h2 class="fw-bold text-white text-break">{{ user.name }}</h2>
+                
+                <div class="mb-3">
+                    {% if user.type == 'admin' %}
+                        <span class="badge bg-danger rounded-pill mb-1">ADMIN</span>
+                    {% endif %}
+                    {% if user.oauth_id %}
+                        <span class="badge bg-primary rounded-pill mb-1">Official</span>
+                    {% endif %}
+                </div>
+
+                {% if user.team_id %}
+                    <div class="mb-3">
+                        <small class="text-white d-block uppercase">Team</small>
+                        <a href="{{ url_for('teams.public', team_id=user.team_id) }}" class="text-decoration-none fs-5 text-white fw-bold" style="transition: all 0.2s ease;" onmouseover="this.style.textDecoration='underline'; this.style.textDecorationThickness='2px'; this.style.textUnderlineOffset='4px';" onmouseout="this.style.textDecoration='none';">
+                             <i class="fas fa-users me-1"></i> {{ user.team.name }}
+                        </a>
+                    </div>
+                {% endif %}
+
+                <div class="row gx-2">
+                    <div class="col-6">
+                        <div class="stat-box">
+                            <small class="text-white uppercase" style="font-size: 0.7rem;">Rank</small>
+                            <h3 class="fw-bold text-white mb-0">
+                                {% if account.place %}
+                                    #{{ account.place }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="stat-box">
+                            <small class="text-white uppercase" style="font-size: 0.7rem;">Points</small>
+                            <h3 class="fw-bold text-warning mb-0">
+                                {% if account %}
+                                    {{ account.get_score(admin=True) }}
+                                {% else %}
+                                    0
+                                {% endif %}
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-start ps-2">
+                    {% if user.affiliation %}
+                        <div class="mb-2 text-white">
+                            <i class="fas fa-building me-2 text-muted"></i> {{ user.affiliation }}
+                        </div>
+                    {% endif %}
+                    
+                    {% if user.country %}
+                        <div class="mb-2 text-white">
+                            <i class="fas fa-flag me-2 text-muted"></i> {{ lookup_country_code(user.country) }}
+                        </div>
+                    {% endif %}
+
+                    {% if user.website %}
+                         <div class="mb-2">
+                            <a href="{{ user.website }}" target="_blank" class="text-decoration-none text-white">
+                                <i class="fas fa-link me-2 text-muted"></i> Website
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-8 col-lg-9">
+            
+            {% set solves = user.solves %}
+            {% set awards = user.awards %}
+
+            {% if solves or awards %}
+                
+                {% if awards %}
+                    <div class="mb-5">
+                        <h4 class="section-title"><i class="fas fa-trophy me-2 text-warning"></i> Awards</h4>
+                        <div class="row">
+                            {% for award in awards %}
+                                <div class="col-12">
+                                    <div class="award-card">
+                                        <div class="me-4 text-center" style="min-width: 60px;">
+                                            <i class="award-icon award-{{ award.icon }} fa-3x text-warning"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h5 class="fw-bold text-white mb-1">{{ award.name }}</h5>
+                                            {% if award.category %}
+                                                <span class="badge bg-secondary mb-1">{{ award.category }}</span>
+                                            {% endif %}
+                                            <p class="mb-0 text-muted small">{{ award.description }}</p>
+                                        </div>
+                                        <div class="text-end ps-3">
+                                            <h4 class="fw-bold text-info mb-0">+{{ award.value }}</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="mb-5">
+                     <h4 class="section-title"><i class="fas fa-check-circle me-2 text-success"></i> Solves History</h4>
+                     <table class="table table-list-style">
+                        <thead>
+                        <tr>
+                          <th>Challenge</th>
+                          <th class="d-none d-md-table-cell">Category</th>
+                          <th>Value</th>
+                          <th>Time</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for solve in solves %}
+                          <tr>
+                            <td>
+                              <a href="{{ url_for('challenges.listing') }}#{{ solve.challenge.name }}-{{ solve.challenge.id }}" class="text-decoration-none" style="color: #212529 !important; transition: all 0.2s ease;" onmouseover="this.style.textDecoration='underline'; this.style.textDecorationThickness='2px'; this.style.textUnderlineOffset='4px';" onmouseout="this.style.textDecoration='none';">
+                                {{ solve.challenge.name }}
+                              </a>
+                            </td>
+                            <td class="d-none d-md-table-cell text-muted">{{ solve.challenge.category }}</td>
+                            <td class="text-info fw-bold">{{ solve.challenge.value }}</td>
+                            <td class="solve-time text-muted small">
+                              <span data-time="{{ solve.date | isoformat }}">{{ solve.date }}</span>
+                            </td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                </div>
+
+                <div class="mb-4" x-data="UserGraphs">
+                    <h4 class="section-title"><i class="fas fa-chart-line me-2 text-info"></i> Statistics</h4>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                             <div class="progress mb-2" style="height: 10px; background: #333;">
+                                <div class="progress-bar bg-success" role="progressbar" :style="{ width: `${getSolvePercentage()}%` }"></div>
+                                <div class="progress-bar bg-danger" role="progressbar" :style="{ width: `${getFailPercentage()}%` }"></div>
+                             </div>
+                             <small class="text-white">
+                                <span class="text-success">●</span> Solves <span x-text="`(${getSolvePercentage()}%)`"></span> &nbsp;
+                                <span class="text-danger">●</span> Fails <span x-text="`(${getFailPercentage()}%)`"></span>
+                             </small>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                         <div class="col-md-12">
+                             <div class="progress mb-2" style="height: 10px; background: #333;">
+                                <template x-for="category in getCategoryBreakdown()" :key="category.name">
+                                  <div class="progress-bar" role="progressbar" :style="{ width: `${category.percent}%`, 'background-color': category.color }"></div>
+                                </template>
+                              </div>
+                              <div class="d-flex flex-wrap gap-3">
+                                <template x-for="category in getCategoryBreakdown()" :key="category.name">
+                                    <small class="text-white">
+                                        <span :style="{color: category.color}">●</span> 
+                                        <span x-text="`${category.name}`"></span>
+                                    </small>
+                                </template>
+                              </div>
+                         </div>
+                    </div>
+
+                    <div class="card p-3 border-0" style="background: rgba(255,255,255,0.02); border-radius: 10px;">
+                        <div id="score-graph" x-ref="scoregraph" class="w-100 d-flex align-items-center" style="min-height: 350px;">
+                            <div class="text-center w-100">
+                                <i class="fas fa-circle-notch fa-spin fa-3x fa-fw spinner text-muted"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            {% else %}
+                <div class="row min-vh-50 d-flex align-items-center justify-content-center">
+                    <div class="text-center opacity-50">
+                        <i class="fas fa-ghost fa-3x mb-3"></i>
+                        <h3>No activity yet</h3>
+                        <p>Solve some challenges to see stats here!</p>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div> </div> </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+      // Mengambil data user untuk grafik
+      window.stats_data = {{ {
+        'type': 'user',
+        'id': user.id,
+        'name': user.name,
+        'account_id': user.id,
+      } | tojson }};
+  </script>
+
+  {{ Assets.js("assets/js/users/private.js") }}
+{% endblock %}

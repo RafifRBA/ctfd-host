@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+  <div class="container text-center">
+    <h1>{% trans %}Teams{% endtrans %}</h1>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    {# Loop Tim #}
+    {% for team in teams.items %}
+    <div class="col-md-4 col-sm-6 mb-4">
+      <div class="team-card-custom h-100 position-relative p-4 text-center d-flex flex-column align-items-center justify-content-center" 
+           style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; transition: all 0.3s ease;">
+        
+        <a href="{{ url_for('teams.public', team_id=team.id) }}" class="stretched-link"></a>
+
+        <div class="team-avatar mb-3 rounded-circle shadow-lg d-flex align-items-center justify-content-center" 
+             style="width: 100px; height: 100px; font-size: 2.5rem; background: linear-gradient(135deg, #577BC1, #344CB7); color: white; border: 3px solid rgba(255,255,255,0.3);">
+          {{ team.name[0] | upper }}
+        </div>
+        
+        <h3 class="team-title fw-bold text-white mb-4 text-truncate w-100" style="letter-spacing: 0.5px;">
+          {{ team.name }}
+        </h3>
+        
+        <div class="mt-auto">
+           <span class="btn btn-sm btn-outline-light rounded-pill px-4" style="font-size: 0.85rem; pointer-events: none;">
+              View Profile
+           </span>
+        </div>
+
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if teams.pages > 1 %}
+  <div class="row mt-5">
+    <div class="col-md-12 text-center">
+      <div class="pagination-wrapper d-inline-block p-2 rounded-pill" style="background: rgba(255,255,255,0.05);">
+        {% for page in range(1, teams.pages + 1) %}
+          <a href="{{ url_for('teams.listing', page=page) }}" class="btn btn-sm {{ 'btn-primary' if page == teams.page else 'btn-outline-secondary' }} rounded-circle mx-1" style="width: 35px; height: 35px; padding: 0; line-height: 33px;">
+            {{ page }}
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<style>
+/* Efek Hover: Kartu naik sedikit & avatar membesar */
+.team-card-custom:hover {
+    transform: translateY(-8px);
+    background: rgba(255,255,255,0.1) !important;
+    border-color: rgba(255,255,255,0.3) !important;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+}
+
+.team-card-custom:hover .team-avatar {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+</style>
+{% endblock %}
